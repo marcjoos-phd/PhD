@@ -1,0 +1,58 @@
+<?php
+// Custom the following global variables:
+$GLOBALS['root']=$_SERVER['DOCUMENT_ROOT']."/annuaire/";
+$GLOBALS['prefix_db']="auddas_";
+
+function add_include_path ($path) {
+    foreach (func_get_args() AS $path) {
+        if (!file_exists($path) OR (file_exists($path) && filetype($path) !== 'dir')) {
+            trigger_error("Include path '{$path}' not exists", E_USER_WARNING);
+            continue;
+        }
+        $paths = explode(PATH_SEPARATOR, get_include_path());
+        if (array_search($path, $paths) === false)
+            array_push($paths, $path);
+        set_include_path(implode(PATH_SEPARATOR, $paths));
+    }
+}
+
+function remove_include_path ($path) {
+    foreach (func_get_args() AS $path) {
+        $paths = explode(PATH_SEPARATOR, get_include_path());
+        if (($k = array_search($path, $paths)) !== false) {
+            unset($paths[$k]);
+        } else {
+            continue;
+        }
+        if (!count($paths)) {
+            trigger_error("Include path '{$path}' can not be removed because it is the only", E_USER_NOTICE);
+            continue;
+        }
+        set_include_path(implode(PATH_SEPARATOR, $paths));
+    }
+}
+
+function protect($string) {
+	$string = trim(strip_tags(addslashes($string)));
+	return $string;
+}
+
+function get_extension($name) {
+	$name = explode(".", $name);
+	$nb = count($name);
+	return strtolower($name[$nb-1]);
+}
+
+function print_r_html($arr) {
+    echo '<pre>';
+    print_r($arr);
+    echo '<pre>';
+}
+
+$webservices = $GLOBALS['root']."/webservices";
+$includes = $GLOBALS['root']."/includes";
+
+add_include_path($webservices);
+add_include_path($includes);
+
+?>
