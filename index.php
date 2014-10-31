@@ -125,26 +125,38 @@ setlocale(LC_ALL, 'fr_FR');
             if ((isset($_GET['user']))) {
                 $edit = (($_GET['user'] === $_SESSION['id']) | ($_SESSION['privilege'] == 2));
                 if ($_GET['page'] == "list_profile") {        
-                    User::produce_display2($_GET['user'], $edit);
+                    User::produce_display($_GET['user'], $edit);
                     User::produce_theses_list($_GET['user'], $edit);
                 } else if ($_GET['page'] == "list_complete_profile") {
-                    User::produce_display2($_GET['user'], $edit);
+                    User::produce_display($_GET['user'], $edit);
                     User::produce_theses_list($_GET['user'], $edit);
                     User::produce_jobs_list($_GET['user'], $edit);
                 } else if ($_GET['page'] == "edit_profile") {
-                    User::produce_form2($_GET['user']);
+                    User::produce_form($_GET['user']);
                 } else if ($_GET['page'] == "edit_thesis") {
                     if (isset($_GET['id'])) {
-                        Thesis::produce_form2($_GET['id']);
+                        Thesis::produce_form($_GET['id']);
+                    }
+                } else if ($_GET['page'] == "delete_thesis") {
+                    if (isset($_GET['id'])) {
+                        Thesis::delete_thesis($_GET['id']);
                     }
                 } else if ($_GET['page'] == "list_job") {
                     User::produce_jobs_list($_GET['user'], $edit);  
                     User::produce_theses_list($_GET['user'], $edit); 
                 } else if ($_GET['page'] == "edit_job") {
                     if (isset($_GET['id'])) {
-                        Job::produce_form3($_GET['id']);
+                        Job::produce_form($_GET['id']);
+                    }
+                } else if ($_GET['page'] == "delete_job") {
+                    if (isset($_GET['id'])) {
+                        Job::delete_job($_GET['id']);
                     }
                 }
+            } else if ($_GET['page'] == "thesis_deleted") {
+                echo "Votre th&egrave;se a bien &eacute;t&eacute; supprim&eacute;e.";
+            } else if ($_GET['page'] == "job_deleted") {
+                echo "Votre exp&eacute;rience professionnelle a bien &eacute;t&eacute; supprim&eacute;e.";
             } else if ($_GET['page'] == "search") {
                 //if ($_SESSION['privilege'] < 1) {
                 //    echo "Vous devez &ecirc;tre &agrave; jour de votre c&ocirc;tisation pour acc&eacute;der &agrave; cette page.";    
@@ -159,16 +171,30 @@ setlocale(LC_ALL, 'fr_FR');
                 } else {
                     echo "Vous n'avez pas les droits n&eacute;cessaires pour acc&eacute;der &agrave; cette page.";
                 }
+            } else if ($_GET['page'] == "delete_account") {
+                if ($_SESSION['privilege'] == 2) {
+                    echo "<form method='POST' action='".$_SERVER['REQUEST_URI']."'>";
+                    echo "&Ecirc;tes-vous s&ucirc;r de vouloir supprimer le profil #".$_GET["id"]."&nbsp;? <input type='submit' name='delete' value='Supprimer'></form><br/>";
+                    echo "Pour m&eacute;moire, voici le profil que vous vous appr&ecirc;tez &agrave; supprimer :";
+                    $edit = True;
+                    User::produce_display($_GET['id'], $edit);
+                    User::produce_theses_list($_GET['id'], $edit);
+                    User::produce_jobs_list($_GET['id'], $edit);
+                    if (isset($_POST['delete'])) {
+                        Account::delete_whole_user($_GET['id']);
+                        echo "<meta http-equiv='refresh' content='0;url=./index.php?page=account_deleted&id=".$_GET['id']."'>";
+                    }
+                } else {
+                    echo "Vous n'avez pas les droits n&eacute;cessaires pour acc&eacute;der &agrave; cette page.";
+                }
+            } else if ($_GET['page'] == "account_deleted") {
+                echo "Le compte #".$_GET['id']." a bien &eacute;t&eacute; supprim&eacute; !";
             //-- TESTS
             } else if ($_GET['page'] == "test") {
                 // Account::check_subscription_date(2);
+                // Account::delete_whole_user(33);
                 // $fields = User::get_fields();
                 // $fields = Job::get_fields();
-                // User::produce_display2($_SESSION['id'], true);
-                // Job::produce_form3(31);
-                // Job::produce_display2(31);
-                // Thesis::produce_form2(7);
-                // Thesis::produce_display2(7);
                 // foreach ($fields as $field) {
                 //     echo $field['field_name']."<br/>";
                 // }

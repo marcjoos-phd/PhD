@@ -388,7 +388,8 @@ public static function produce_display($input_id, $input_displaytitle = self::de
     $current_job = ($input_id != 0) ? self::retrieve($input_id, $input_dbname) : new Job();
     $fields = Job::get_fields($input_fields_dbname);
     if ($_POST['delete'] && ($_GET['job'] == $current_job->id)) {
-        $current_job->delete($input_dbname);
+        //$current_job->delete($input_dbname);
+        echo "<meta http-equiv='refresh' content='0;url=./index.php?page=delete_job&user=".$_GET['user']."&id=".$current_job->id."'>";
     } else {
         $query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
         parse_str($query, $params);
@@ -426,6 +427,23 @@ public static function produce_display($input_id, $input_displaytitle = self::de
         }
     // }
 
+}
+
+// Delete a given job
+public static function delete_job($input_id, $input_dbname = self::default_database)
+{
+    $edit = (($_GET['user'] === $_SESSION['id']) | ($_SESSION['privilege'] == 2));
+    if ($edit) {
+        $current_job = self::retrieve($input_id, $input_dbname);
+        echo "<form method='POST' action='".$_SERVER['REQUEST_URI']."'>";
+        echo "&Ecirc;tes-vous s&ucirc;r de vouloir supprimer cette exp&eacute;rience professionnelle&nbsp;? <input type='submit' name='delete' value='Supprimer'></form><br/>";
+        echo "Pour m&eacute;moire, voici l'exp&eacute;rience professionnelle en question&nbsp;:";
+        self::produce_display($current_job->id);
+        if (isset($_POST['delete'])) {
+            $current_job->delete($input_dbname);
+            echo "<meta http-equiv='refresh' content='0;url=./index.php?page=job_deleted'>";
+        }
+    }
 }
 //--------------------------------------------------------------------------- //
 

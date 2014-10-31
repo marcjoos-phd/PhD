@@ -338,7 +338,8 @@ public static function produce_display($input_id, $input_displaytitle = self::de
     $current_thesis = ($input_id != 0) ? self::retrieve($input_id, $input_dbname) : new Job();
     $fields = Thesis::get_fields($input_fields_dbname);
     if ($_POST['delete'] && ($_GET['thesis'] == $current_thesis->id)) {
-        $current_thesis->delete($input_dbname);
+        //$current_thesis->delete($input_dbname);
+        echo "<meta http-equiv='refresh' content='0;url=./index.php?page=delete_thesis&user=".$_GET['user']."&id=".$current_thesis->id."'>";
     } else {
         $query = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
         parse_str($query, $params);
@@ -373,6 +374,23 @@ public static function produce_display($input_id, $input_displaytitle = self::de
         echo "</form>";
         }
     // }
+}
+
+// Delete a given thesis
+public static function delete_thesis($input_id, $input_dbname = self::default_database)
+{
+    $edit = (($_GET['user'] === $_SESSION['id']) | ($_SESSION['privilege'] == 2));
+    if ($edit) {
+        $current_thesis = self::retrieve($input_id, $input_dbname);
+        echo "<form method='POST' action='".$_SERVER['REQUEST_URI']."'>";
+        echo "&Ecirc;tes-vous s&ucirc;r de vouloir supprimer cette th&egrave;se&nbsp;? <input type='submit' name='delete' value='Supprimer'></form><br/>";
+        echo "Pour m&eacute;moire, voici la th&egrave;se en question&nbsp;:";
+        self::produce_display($current_thesis->id);
+        if (isset($_POST['delete'])) {
+            $current_thesis->delete($input_dbname);
+            echo "<meta http-equiv='refresh' content='0;url=./index.php?page=thesis_deleted'>";
+        }
+    }
 }
 //--------------------------------------------------------------------------- //
 

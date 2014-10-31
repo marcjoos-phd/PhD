@@ -785,7 +785,7 @@ public static function list_all_accounts($input_dbname = self::default_database)
         echo "</td><td><input type='text' class='datepicker' id=datepicker_".$row['id']." name='sub_date_".$row['id']."' value='".($sub_date === $default_date->format('Y-m-d') ? "" : $sub_date)."'></td>";
         echo "<td><input type='submit' name='delete_".$row['id']."' value='supprimer cet utilisateur'></td></tr>";
     }
-    echo "<tr><td colspan=5><center><input type='submit' name='submit' value='Enregistrer'></center></td></tr>";
+    echo "<tr><td colspan=6><center><input type='submit' name='submit' value='Enregistrer'></center></td></tr>";
     echo "</table>";
     echo "</form>";
     include("closedb.php");
