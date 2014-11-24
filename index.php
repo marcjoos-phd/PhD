@@ -70,9 +70,11 @@ setlocale(LC_ALL, 'fr_FR');
                         echo "<li><a href=\"./index.php?page=admin\">Administration</a></li>";
                     }
                     echo "<li><a href=\"./index.php?page=contact\">Nous contacter</a></li>";
+                    echo "<li><a href=\"./index.php?page=credits\">Cr&eacute;dits</a></li>";
                     echo "<li><a href=\"./index.php\">Revenir &agrave; l'accueil</a></li>";
                 } else {
                     echo "<li><a href=\"./index.php?page=contact\">Nous contacter</a></li>";
+                    echo "<li><a href=\"./index.php?page=credits\">Cr&eacute;dits</a></li>";
                 }
 ?>
             </ul>
@@ -110,6 +112,10 @@ setlocale(LC_ALL, 'fr_FR');
                 <li>Webmaster : <a href=\"mailto:webmaster@auddas.fr\">webmaster [at] auddas.fr</a></li>
                 <li>Contact g&eacute;n&eacute;ral : <a href=\"mailto:contact@auddas.fr\">contact [at] auddas.fr</a></li>
             </ul>";
+        } else if ($_GET['page'] == "credits") {
+            echo "<p>Cet annuaire utilise <a href=\"https://github.com/marcjoos/PhD\">PhD - Phone Directory for PhD</a>, un projet d'annuaire en ligne d&eacute;velopp&eacute; pour AUDDAS, sous <a href=\"http://www.gnu.org/licenses/gpl.html\">licence GNU/GPL version 3</a>.<br/>";
+            echo "<i>Tous droits r&eacute;serv&eacute;s</i> 2013-2014, <b>Marc Joos</b> &amp; <b>Vincent Reverdy</b>.</p>";
+            echo "<p>Le d&eacute;veloppement initial de ce projet s'est bas&eacute; sur <a href=\"https://code.google.com/p/fliker/\">Fliker</a>, un projet d'annuaire pour associations d&eacute;velopp&eacute; par <a href=\"https://code.google.com/p/fliker/people/list\">Philippe Marty et al.</a> que nous remer&ccedil;ions pour le coup de pouce initial !</p>";
         } else if ($_GET['page'] == "check_subscription") {
            Account::check_subscription_all(); 
         } else if (!isset($_SESSION['login'])) { 
@@ -200,10 +206,13 @@ setlocale(LC_ALL, 'fr_FR');
                 // }
             //-- TESTS
             } else if (!isset($_GET['user'])) {
+                if (in_array($_GET['page'], array("contact", "credits"))) {
+                } else {
                 echo "<p><b>Bienvenue sur l'annuaire d'AUDDAS !</b></p>
                 <p>Vous pouvez compl&eacute;ter et &eacute;diter votre profil, renseigner vos exp&eacute;riences professionnelles, et chercher dans notre base d'adh&eacute;rents.</p>
                 <p><br/></p>
                 <center><img src=\"./includes/img/logo.png\"></center>";
+                }
             } else {
                 echo "Vous n'avez pas les droits n&eacute;cessaires pour acc&egrave;der &agrave; cette page. Si vous tentez d'&eacute;diter une de vos exp&eacute;riences professionnelles et que vous obtenez ce message d'erreur, merci de contacter les administrateurs.";
             }   
