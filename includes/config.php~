@@ -1,7 +1,0 @@
-<?php
-// Connection to database
-$dbhost = "mysql51-97.bdb";	
-$dbuser = "auddasmod1";
-$dbpass = "EPj46hmz";
-$dbname = "auddasmod1";
-?>
